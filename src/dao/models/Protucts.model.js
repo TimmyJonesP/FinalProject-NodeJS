@@ -7,7 +7,10 @@ const collectionSchema = new mongoose.Schema({
     description: String,
     price: Number,
     thumbnail: String,
-    code: String,
+    code:{
+        type: String,
+        unique: true,
+    },
     stock: Number
 })
 

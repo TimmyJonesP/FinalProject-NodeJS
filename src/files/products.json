@@ -1,0 +1,82 @@
+[
+    {
+        "title": "Laptop Lenovo ThinkPad X1 Carbon",
+        "description": "Laptop ultradelgada y ultraligera con procesador Intel Core i7 y pantalla Full HD de 14 pulgadas.",
+        "price": 1899.99,
+        "thumbnail": "https://example.com/images/thinkpad-x1-carbon.jpg",
+        "code": "THK-001",
+        "stock": 20
+    },
+    {
+        "title": "Monitor LG 27GL850-B",
+        "description": "Monitor gaming de 27 pulgadas con resolución QHD y tiempo de respuesta de 1 ms.",
+        "price": 499.99,
+        "thumbnail": "https://example.com/images/lg-27gl850-b.jpg",
+        "code": "LGM-002",
+        "stock": 15
+    },
+    {
+        "title": "Teclado mecánico Corsair K95 RGB Platinum XT",
+        "description": "Teclado mecánico de alta gama con interruptores Cherry MX Speed y retroiluminación RGB.",
+        "price": 229.99,
+        "thumbnail": "https://example.com/images/corsair-k95-rgb-platinum-xt.jpg",
+        "code": "CRS-003",
+        "stock": 25
+    },
+    {
+        "title": "Mouse Logitech MX Master 3",
+        "description": "Mouse inalámbrico con tecnología Bluetooth y sensor Darkfield de 4000 DPI.",
+        "price": 99.99,
+        "thumbnail": "https://example.com/images/logitech-mx-master-3.jpg",
+        "code": "LGT-004",
+        "stock": 30
+    },
+    {
+        "title": "Memoria RAM Corsair Vengeance LPX DDR4",
+        "description": "Memoria RAM DDR4 de alta velocidad y baja latencia con capacidad de 16 GB.",
+        "price": 109.99,
+        "thumbnail": "https://example.com/images/corsair-vengeance-lpx-ddr4.jpg",
+        "code": "CRS-005",
+        "stock": 40
+    },
+    {
+        "title": "Disco duro externo WD My Passport",
+        "description": "Disco duro externo con capacidad de 2 TB y conectividad USB 3.2 Gen 1.",
+        "price": 89.99,
+        "thumbnail": "https://example.com/images/wd-my-passport.jpg",
+        "code": "WDD-006",
+        "stock": 50
+    },
+    {
+        "title": "Tarjeta gráfica NVIDIA GeForce RTX 3080 Ti",
+        "description": "Tarjeta gráfica de gama alta con arquitectura Ampere y memoria GDDR6X de 12 GB.",
+        "price": 1499.99,
+        "thumbnail": "https://example.com/images/nvidia-geforce-rtx-3080-ti.jpg",
+        "code": "NVD-007",
+        "stock": 10
+    },
+    {
+        "title": "Procesador AMD Ryzen 9 5900X",
+        "description": "Procesador de 12 núcleos y 24 hilos con velocidad base de 3.7 GHz y velocidad máxima de hasta 4.8 GHz.",
+        "price": 569.99,
+        "thumbnail": "https://example.com/images/amd-ryzen-9-5900x.jpg",
+        "code": "AMD-008",
+        "stock": 18
+    },
+    {
+        "title": "Caja de torre ATX Corsair Obsidian Series 500D RGB SE",
+        "description": "Caja de torre ATX con ventana de vidrio templado y tres ventiladores RGB de 120 mm.",
+        "price": 249.99,
+        "thumbnail": "https://example.com/images/corsair-obsidian-series-500d-rgb-se.jpg",
+        "code": "CRS-009",
+        "stock": 12
+    },
+    {
+        "title": "Altavoces Logitech Z906",
+        "description": "Sistema de altavoces 5.1 con sonido envolvente y potencia total de 500 W RMS.",
+        "price": 349.99,
+        "thumbnail": "https://example.com/images/logitech-z906.jpg",
+        "code": "LGT-010",
+        "stock": 22
+    }
+]

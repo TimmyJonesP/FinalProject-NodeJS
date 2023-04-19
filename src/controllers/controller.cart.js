@@ -1,10 +1,15 @@
 const { Router } = require('express')
-const Carts = require('../models/Cart.model')
+const Carts = require('../dao/models/Cart.model')
 
 const router = Router()
 
 router.get('/', async (req, res) => {
-    res.json({ message: "hi carts" })
+    try {
+        const carts = await Carts.find()
+        res.json({ message: carts})
+    } catch (error) {
+        res.json(error)
+    }
 })
 
 router.post('/', async (req, res) => {
