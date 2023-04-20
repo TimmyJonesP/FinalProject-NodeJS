@@ -1,9 +1,10 @@
 const { Router } = require('express')
-const Products = require('../dao/models/Protucts.model');
+const Products = require('../dao/models/Products.model');
 const uploader = require('../utils/multer.utils');
 const fs = require("fs");
 const fileManager = require('../dao/filemanager.dao');
 const ProductsDao = require('../dao/products.dao');
+const removeAccents = require('remove-accents');
 const router = Router();
 
 const FileManager = new fileManager;
@@ -18,25 +19,31 @@ router.get('/', async (req, res) => {
     const bystock = req.query.stock || '';
 
     try {
-        const pipeline = [
-            { $unwind: '$products' },
-            { $match: { 'products.name': { $regex: query, $options: 'i' } } },
-            { $sort: { [sort]: -1 } },
-            { $sort: { stock: bystock === 'true' ? -1 : 1 } },
-            { $skip: (page - 1) * limit },
-            { $limit: limit }
-        ];
+        let result;
+        let count;
 
-        const result = await Products.aggregate(pipeline);
+        if (limit || page || (sort && sort.length > 0) || query || bystock) {
+            const pipeline = [
+                { $match: { 'title': { $regex: query, $options: 'i' } } },
+                ...(sort && sort.length > 0 ? [{ $sort: { [sort]: -1 } }] : []),
+                { $sort: { stock: bystock === 'true' ? -1 : 1 } },
+                { $sort: { price: sort === 'asc' ? 1 : -1 } },
+                { $skip: (page - 1) * limit },
+                { $limit: limit }
+            ];
 
-        const countPipeline = [
-            { $unwind: '$products' },
-            { $match: { 'products.name': { $regex: query, $options: 'i' } } },
-            { $group: { _id: null, count: { $sum: 1 } } }
-        ];
+            result = await Products.aggregate(pipeline);
 
-        const countResult = await Products.aggregate(countPipeline);
-        const count = countResult.length > 0 ? countResult[0].count : 0;
+            const countPipeline = [
+                { $match: { 'title': { $regex: query, $options: 'i' } } },                { $group: { _id: null, count: { $sum: 1 } } }
+            ];
+
+            const countResult = await Products.aggregate(countPipeline);
+            count = countResult.length > 0 ? countResult[0].count : 0;
+        } else {
+            result = await Products.find();
+            count = result.length;
+        }
 
         const totalPages = Math.ceil(count / limit);
         const hasPrevPage = page > 1;
