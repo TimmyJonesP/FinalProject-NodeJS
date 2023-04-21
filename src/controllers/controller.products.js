@@ -50,8 +50,7 @@ router.get('/', async (req, res) => {
         const hasNextPage = page < totalPages;
         const prevLink = hasPrevPage ? `${req.protocol}://${req.get('host')}${req.baseUrl}?limit=${limit}&page=${page - 1}&sort=${sort}&query=${query}&stock=${bystock}` : null;
         const nextLink = hasNextPage ? `${req.protocol}://${req.get('host')}${req.baseUrl}?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}&stock=${bystock}` : null;
-
-        res.status(200).json({
+        res.render("products.handlebars", {
             status: 'success',
             payload: result,
             totalPages,
@@ -62,7 +61,7 @@ router.get('/', async (req, res) => {
             hasNextPage,
             prevLink,
             nextLink
-        });
+        })
     } catch (err) {
         res.status(500).json({ error: err.message, status: 'error' });
     }

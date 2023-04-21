@@ -1,5 +1,5 @@
 const express = require('express')
-const hbs = require('express-handlebars')
+const handlebars = require('express-handlebars')
 const mongoConnect = require('../db')
 const router = require('./router')
 
@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
 app.use(express.static(__dirname + '/public'))
 
-app.engine('handlebars', hbs.engine())
+app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname + '/views')
 
 mongoConnect()

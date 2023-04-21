@@ -26,11 +26,12 @@ router.post("/", async (req, res) => {
 
 router.get('/:cid', async (req, res) => {
     try {
-        const cart = await Carts.findById(req.params.cid).populate('products.productId');
+        const cart = await Carts.findById(req.params.cid).populate('products.productId').lean();
         if (!cart) {
             return res.status(404).json({ error: 'Cart not found' });
         }
-        res.json(cart);
+        console.log(cart)
+        res.render("cart.handlebars",{ carro : cart});
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
