@@ -1,22 +1,23 @@
 const { Router } = require('express')
 const Products = require('../dao/models/Products.model');
 const uploader = require('../utils/multer.utils');
-const fs = require("fs");
+
 const fileManager = require('../dao/filemanager.dao');
 const ProductsDao = require('../dao/products.dao');
-const removeAccents = require('remove-accents');
+const privateAccess = require('../middlewares/privateAccess.middleware');
 const router = Router();
 
 const FileManager = new fileManager;
 
 const ProDao = new ProductsDao;
 
-router.get('/', async (req, res) => {
+router.get('/', privateAccess, async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const page = parseInt(req.query.page) || 1;
     const sort = req.query.sort || '';
     const query = req.query.query || '';
     const bystock = req.query.stock || '';
+    const {user} = req.session
 
     try {
         let result;
@@ -45,6 +46,7 @@ router.get('/', async (req, res) => {
             count = result.length;
         }
 
+
         const totalPages = Math.ceil(count / limit);
         const hasPrevPage = page > 1;
         const hasNextPage = page < totalPages;
@@ -60,7 +62,8 @@ router.get('/', async (req, res) => {
             hasPrevPage,
             hasNextPage,
             prevLink,
-            nextLink
+            nextLink,
+            user: user
         })
     } catch (err) {
         res.status(500).json({ error: err.message, status: 'error' });
@@ -90,7 +93,7 @@ router.post('/', uploader.single('file'), async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', privateAccess, async (req, res) => {
     try {
         const product = await Products.findById(req.params.id);
 
@@ -141,7 +144,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.get('/loadItems', async (req, res) => {
+router.get('/loadItems', privateAccess, async (req, res) => {
     try {
         const products = await FileManager.loadItems()
         const newProduct = await ProDao.createMany(products)

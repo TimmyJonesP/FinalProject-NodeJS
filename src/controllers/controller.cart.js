@@ -1,10 +1,11 @@
 const { Router } = require('express')
 const Carts = require('../dao/models/Cart.model')
 const Products = require('../dao/models/Products.model')
+const privateAccess = require('../middlewares/privateAccess.middleware')
 
 const router = Router()
 
-router.get('/', async (req, res) => {
+router.get('/', privateAccess, async (req, res) => {
     try {
         const carts = await Carts.find()
         res.json({ message: carts })
@@ -24,7 +25,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.get('/:cid', async (req, res) => {
+router.get('/:cid', privateAccess, async (req, res) => {
     try {
         const cart = await Carts.findById(req.params.cid).populate('products.productId').lean();
         if (!cart) {
