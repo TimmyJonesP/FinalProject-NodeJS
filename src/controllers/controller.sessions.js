@@ -2,6 +2,8 @@ const { Router } = require('express');
 const User = require('../dao/models/User.model');
 const privateAccess = require('../middlewares/privateAccess.middleware');
 const publicAccess = require('../middlewares/publicAccess.middleware');
+const { createHash } = require('../utils/crypt.password');
+const passport = require('passport');
 
 const router = Router()
 
@@ -19,17 +21,8 @@ router.get('/logout', (req, res) => {
     })
 } )
 
-router.post('/signup', async (req, res) => {
+router.post('/signup', passport.authenticate("register", {failureRedirect: '/api/sessions/failureRegister'}),  async (req, res) => {
     try {
-        const { first_name, last_name, email, age, password } = req.body
-        const newUserInfo = {
-            first_name,
-            last_name,
-            email,
-            age,
-            password
-        }
-        const newUser = await User.create(newUserInfo)
         res.status(201).json({ status: 'success', message: newUser });
     } catch (error) {
         res.status(500).json({ status: 'error', error: 'Internal Server Error' });
@@ -40,5 +33,9 @@ router.get('/', privateAccess, (req, res) => {
     res.render("user.handlebars", { user })
 })
 
+router.get('/failureRegister', async (req, res)  => {
+    console.log('Failed strategy')
+    res.json({error: 'Failed Register'})
+})
 
 module.exports = router

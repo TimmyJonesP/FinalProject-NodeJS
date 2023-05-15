@@ -33,7 +33,6 @@ const collectionSchema = new mongoose.Schema({
     },
 });
 
-
 const User = mongoose.model(collectionName, collectionSchema)
 
 module.exports = User

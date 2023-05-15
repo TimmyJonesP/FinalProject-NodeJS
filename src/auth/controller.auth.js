@@ -1,23 +1,17 @@
 const { Router } = require("express");
 const User = require("../dao/models/User.model");
+const { passwordValidate } = require("../utils/crypt.password");
+const passport = require("passport");
 
 const router = Router()
 
-router.post('/', async (req, res) => {
+router.post('/', passport.authenticate('login', {failureRedirect: '/api/sessions/failLogin'}), async (req, res) => {
     try {
-        const {email, password } = req.body
-
-        const user = await User.findOne({ email })
-        if(!user) 
-        return res.status(400).json({status: 'error', error: "Invalid email or password",})
-
-        if(user.password !== password)
-        return res.status(400).json({status: 'error', error: "Invalid email or password",})
-
+        if(!req.user) return res.status(401).json({status: 'error', error: 'Not matches found'})
         req.session.user = {
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
+            first_name: req.user.first_name,
+            last_name: req.user.last_name,
+            email: req.user.email,
         }
 
         res.json({status: 'success', message: "Session on"})
@@ -27,6 +21,11 @@ router.post('/', async (req, res) => {
         res.status(500).json({status: 'error', error: 'Internal Server Error'})
     }
 })
+router.get('/github', passport.authenticate('github', {scope: ['user: email']}), async (req, res) => {
+
+})
+
+router.get( '/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}), async (req, res) =>{})
 
 
 module.exports = router
