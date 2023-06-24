@@ -5,33 +5,25 @@ const collectionName = "User"
 
 
 const collectionSchema = new mongoose.Schema({
-    first_name: {
-        type: String,
-        required: true,
-    },
-    last_name: {
-        type: String,
-        required: true,
-    },
+    first_name: String,
+    last_name: String,
     email: {
         type: String,
-        required: true,
         unique: true,
     },
-    age: {
-        type: Number,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true,
+    age: Number,
+    password: String,
+    cartId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cart',
     },
     role: {
         type: String,
-        enum: ['admin', 'usuario'],
-        default: 'usuario'
-    },
-});
+        enum: ['admin', 'user'],
+        default: 'user',
+    }
+
+})
 
 const User = mongoose.model(collectionName, collectionSchema)
 

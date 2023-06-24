@@ -4,6 +4,7 @@ const privateAccess = require('../middlewares/privateAccess.middleware');
 const publicAccess = require('../middlewares/publicAccess.middleware');
 const { createHash } = require('../utils/crypt.password');
 const passport = require('passport');
+const UserDTO = require('../DTO/user.dto')
 
 const router = Router()
 
@@ -14,14 +15,28 @@ router.get('/signup', publicAccess, async (req, res) => {
 router.get('/login', publicAccess, async (req, res) => {
     res.render('login.handlebars')
 });
+
 router.get('/logout', (req, res) => {
     req.session.destroy(error => {
-        if (error) return res.json({error})
+        if (error) return res.json({ error })
         res.redirect('/login')
     })
-} )
+})
 
-router.post('/signup', passport.authenticate("register", {failureRedirect: '/api/sessions/failureRegister'}),  async (req, res) => {
+router.get('/', (req, res, next) => {
+    try {
+        if (req.session && req.session.user) {
+            const userSession = req.session.user
+            const UserDto = new UserDTO(userSession)
+            return res.status(200).json(UserDto)
+        }
+        next(new ErrorRepository(404))
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.post('/signup', passport.authenticate("register", { failureRedirect: '/api/sessions/failureRegister' }), async (req, res) => {
     try {
         res.status(201).json({ status: 'success', message: newUser });
     } catch (error) {
@@ -29,13 +44,13 @@ router.post('/signup', passport.authenticate("register", {failureRedirect: '/api
     }
 });
 router.get('/', privateAccess, (req, res) => {
-    const {user} = req.session
+    const { user } = req.session
     res.render("user.handlebars", { user })
 })
 
-router.get('/failureRegister', async (req, res)  => {
+router.get('/failureRegister', async (req, res) => {
     console.log('Failed strategy')
-    res.json({error: 'Failed Register'})
+    res.json({ error: 'Failed Register' })
 })
 
 module.exports = router

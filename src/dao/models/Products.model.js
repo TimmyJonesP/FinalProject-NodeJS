@@ -11,6 +11,8 @@ const collectionSchema = new mongoose.Schema({
         type: String,
         unique: true,
     },
+    category: String,
+    status: Boolean,
     stock: Number
 })
 

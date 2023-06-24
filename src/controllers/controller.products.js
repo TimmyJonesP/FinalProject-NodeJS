@@ -5,84 +5,31 @@ const uploader = require('../utils/multer.utils');
 const fileManager = require('../dao/filemanager.dao');
 const ProductsDao = require('../dao/products.dao');
 const privateAccess = require('../middlewares/privateAccess.middleware');
+const adminAccess = require('../middlewares/adminAccess.middleware');
 const router = Router();
 
 const FileManager = new fileManager;
 
 const ProDao = new ProductsDao;
 
-router.get('/', privateAccess, async (req, res) => {
-    const limit = parseInt(req.query.limit) || 10;
-    const page = parseInt(req.query.page) || 1;
-    const sort = req.query.sort || '';
-    const query = req.query.query || '';
-    const bystock = req.query.stock || '';
-    const {user} = req.session
-
+router.get('/', privateAccess, async (req, res, next) => {
     try {
-        let result;
-        let count;
-
-        if (limit || page || (sort && sort.length > 0) || query || bystock) {
-            const pipeline = [
-                { $match: { 'title': { $regex: query, $options: 'i' } } },
-                ...(sort && sort.length > 0 ? [{ $sort: { [sort]: -1 } }] : []),
-                { $sort: { stock: bystock === 'true' ? -1 : 1 } },
-                { $sort: { price: sort === 'asc' ? 1 : -1 } },
-                { $skip: (page - 1) * limit },
-                { $limit: limit }
-            ];
-
-            result = await Products.aggregate(pipeline);
-
-            const countPipeline = [
-                { $match: { 'title': { $regex: query, $options: 'i' } } },                { $group: { _id: null, count: { $sum: 1 } } }
-            ];
-
-            const countResult = await Products.aggregate(countPipeline);
-            count = countResult.length > 0 ? countResult[0].count : 0;
-        } else {
-            result = await Products.find();
-            count = result.length;
-        }
-
-
-        const totalPages = Math.ceil(count / limit);
-        const hasPrevPage = page > 1;
-        const hasNextPage = page < totalPages;
-        const prevLink = hasPrevPage ? `${req.protocol}://${req.get('host')}${req.baseUrl}?limit=${limit}&page=${page - 1}&sort=${sort}&query=${query}&stock=${bystock}` : null;
-        const nextLink = hasNextPage ? `${req.protocol}://${req.get('host')}${req.baseUrl}?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}&stock=${bystock}` : null;
-        res.render("products.handlebars", {
-            status: 'success',
-            payload: result,
-            totalPages,
-            prevPage: hasPrevPage ? page - 1 : null,
-            nextPage: hasNextPage ? page + 1 : null,
-            page,
-            hasPrevPage,
-            hasNextPage,
-            prevLink,
-            nextLink,
-            user: user
-        })
-    } catch (err) {
-        res.status(500).json({ error: err.message, status: 'error' });
+        const user = req.session.user;
+        const message = user
+            ? `Bienvenido ${user.role} ${user.first_name} ${user.last_name}!`
+            : null;
+        const cart = await Cart.findOne({ _id: user.cartId });
+        const cartId = cart._id.toString()
+        const products = await productSearch(req, message, cartId)
+        res.render('products.handlebars', { user: user, products });
+    } catch (error) {
+        next(error)
     }
 });
 
-router.post('/', uploader.single('file'), async (req, res) => {
+router.post('/', adminAccess, uploader.single('file'), async (req, res) => {
     try {
-        const { title, description, price, thumbnail, code, stock } = req.body
-        const newProductInfo = {
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock,
-            image: req.file.filename
-        }
-        const newProduct = await Products.create(newProductInfo)
+        const newProduct = await Products.create(req.body)
         res.json({ message: newProduct })
     } catch (error) {
         if (error.code === 11000) {
@@ -158,4 +105,5 @@ router.delete("/deleteAll", async (req, res) => {
     await ProDao.deleteAll()
     res.json({ message: "Doomed" })
 })
+
 module.exports = router

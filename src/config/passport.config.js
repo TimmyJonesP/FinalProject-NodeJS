@@ -5,6 +5,7 @@ const { passwordValidate } = require("../utils/crypt.password");
 const GithubStrategy = require('passport-github2')
 const LocalStrategy = local.Strategy
 const { CLIENT_ID, CLIENT_SECRET, CLIENT_URL } = require('../config/passport.secret')
+
 const initializePassport = () => {
     passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
         try {

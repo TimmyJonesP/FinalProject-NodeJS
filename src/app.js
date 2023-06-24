@@ -24,12 +24,17 @@ app.use(
         resave: false,
         saveUninitialized: false
 }));
+
+
 initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
+
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
 app.use(express.static(__dirname + '/public'))
+
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname + '/views')

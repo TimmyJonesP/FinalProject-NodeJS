@@ -1,14 +1,15 @@
 const Products = require("./models/Products.model")
+const ProductsRepository = require("./repository/products.repository")
 
 class ProductsDao {
     constructor() { }
 
     async findAll() {
-try {
-    const products = await Products.find()
-} catch (error) {
-    return error
-}
+        try {
+            const products = await Products.find()
+        } catch (error) {
+            return error
+        }
     }
     async createMany(newProductsInfo) {
         try {
@@ -18,14 +19,24 @@ try {
             return error
         }
     }
-    async create(newProductInfo){
+    async create(newProductInfo) {
         try {
             return await Products.create(newProductInfo)
         } catch (error) {
             return error
         }
     }
-    async deleteAll(){
+    async productSearch(req, message, cartId) {
+        try {
+            const productsRepository = new ProductsRepository()
+            const products = await productsRepository.searchProducts(req, message, cartId)
+            return products
+        } catch (error) {
+            return error
+        }
+    }
+
+    async deleteAll() {
         return await Products.deleteMany()
     }
 }
