@@ -69,5 +69,30 @@ class ProductsRepository {
             throw new ErrorRepository(400)
         }
     }
-} 
+    async generateMockProducts() {
+        try {
+            const mockProducts = [];
+
+            for (let i = 1; i <= 100; i++) {
+                const product = {
+                    _id: faker.datatype.uuid(),
+                    name: faker.commerce.productName(),
+                    description: faker.lorem.sentence(),
+                    price: faker.commerce.price(),
+                    stock: faker.random.number(100),
+                    code: `Code ${i}`,
+                    category: `Category ${i}`,
+                    status: true,
+                    img: `https://example.com/image${i}.jpg`
+                };
+
+                mockProducts.push(product);
+            }
+
+            return mockProducts;
+        } catch (error) {
+            throw new ErrorRepository(400, "Can't be generated");
+        }
+    }
+}
 module.exports = ProductsRepository
