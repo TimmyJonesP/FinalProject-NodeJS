@@ -1,6 +1,7 @@
 const Products = require("../models/Products.model");
 const Cart = require('../models/Cart.model');
 const ErrorRepository = require("./error.repository");
+const faker = require('faker')
 
 class ProductsRepository {
     async searchProducts(req, message, cartId) {
