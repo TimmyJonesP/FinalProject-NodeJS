@@ -158,13 +158,13 @@ components:
     Cart:
       type: object
       properties:
-        productos:
+        products:
           type: array
           description: Productos dentro del carrito
           items:
             type: object
             properties:
-              product:
+              productId:
                 type: string
                 description: id del producto
               quantity:

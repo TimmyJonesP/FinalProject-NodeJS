@@ -116,9 +116,9 @@ components:
         price:
           type: number
           description: precio del producto
-        stock:
-          type: number
-          description: cantidad del producto
+        thumbnail:
+          type: string
+          description: url de la imagen del producto
         code:
           type: string
           description: codigo del producto
@@ -128,13 +128,9 @@ components:
         status:
           type: boolean
           description: si está o no disponible el producto
-        thumbnails:
-          type: string
-          description: url de la imagen del producto
-        owner:
-          require: false
-          type: string
-          description: dueño del producto
+        stock:
+          type: number
+          description: cantidad del producto
   requestBodies:
     addProduct:
       description: Informacion para crear un producto.
