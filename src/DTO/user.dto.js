@@ -9,4 +9,4 @@ class UserDTO{
         this.role = "user"
     }
 }
-model.exports = UserDTO
+module.exports = UserDTO
