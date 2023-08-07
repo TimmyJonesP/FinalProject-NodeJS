@@ -69,7 +69,7 @@ router.put('/:cid', userAccess, async (req, res) => {
     }
 });
 
-router.post('/:cid/product/p:pid', userAccess, async (req, res) => {
+router.post('/:cid/product/:pid', userAccess, async (req, res) => {
     try {
         const cart = await Carts.findOne({ _id: req.params.cartId })
         const product = await Products.findOne({ _id: req.params.productId })

@@ -21,6 +21,7 @@ login.addEventListener('submit', e => {
         body,
     })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data =>{ console.log(data);
+        window.location.href = '/api/products'})
         .catch(error => console.log(error));
 });

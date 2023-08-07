@@ -27,7 +27,7 @@ router.get('/', privateAccess, async (req, res, next) => {
     }
 });
 
-router.post('/', adminAccess, uploader.single('file'), async (req, res) => {
+router.post('/', adminAccess, async (req, res) => {
     try {
         const newProduct = await Products.create(req.body)
         res.json({ message: newProduct })

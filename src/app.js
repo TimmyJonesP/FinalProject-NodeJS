@@ -15,6 +15,10 @@ const swaggerUiExpress = require('swagger-ui-express')
 const app = express()
 
 app.use(cookieParser())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true}))
+app.use(express.static(__dirname + '/public'))
+
 app.use(
     session({
         store: MongoStore.create({
@@ -24,22 +28,8 @@ app.use(
         }),
         secret: 'coderSecret',
         resave: false,
-        saveUninitialized: false
+        saveUninitialized: false,
 }));
-
-
-initializePassport()
-app.use(passport.initialize())
-app.use(passport.session())
-
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true}))
-app.use(express.static(__dirname + '/public'))
-
-
-app.engine('handlebars', handlebars.engine())
-app.set('views', __dirname + '/views')
 
 const swaggerOptions = {
     definition:{
@@ -53,6 +43,17 @@ const swaggerOptions = {
 }
 const specs = swaggerJSDoc(swaggerOptions)
 app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
+
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
+
+
+
+
+app.engine('handlebars', handlebars.engine())
+app.set('views', __dirname + '/views')
+
 mongoConnect()
 router(app)
 

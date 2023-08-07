@@ -6,7 +6,7 @@ class UserRepository {
     async createUser(userInfo) {
         try {
             const { first_name, last_name, email, age, password } = userInfo
-            let role = 'usuario'
+            let role = 'user'
             const cart = new Carts()
             await cart.save()
             const cartId = cart._id
