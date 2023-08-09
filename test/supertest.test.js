@@ -3,7 +3,7 @@ const supertest = require('supertest')
 const {port} = require('../src/config/app.config')
 
 const expect = chai.expect
-const requester = supertest(`http://localhost:${port}`)
+const requester = supertest(`http://localhost:3000`)
 
 let cookies;
 
@@ -22,7 +22,7 @@ describe('test de productos', ()=>{
     it('Se deben mostrar todos los productos: GET --> /api/products', async ()=>{
         const getProducts = await requester
             .get('/api/products')
-        expect(getProducts.status).to.be.equal(302)
+        expect(getProducts.status).to.be.equal(200)
     });
     it('Se debe agregar un producto: POST --> /api/products', async ()=>{
         const product = {
@@ -50,7 +50,7 @@ describe('test de carrito', ()=>{
         
         const getCart = await requester
             .get(`/api/cart/${cartId}`)
-        expect(getCart.status).to.be.equal(302)
+        expect(getCart.status).to.be.equal(200)
     })
 
     it('Se debe vaciar un carrito: DELETE --> /api/carts/:cid', async()=>{

@@ -3,7 +3,6 @@ const Carts = require('../dao/models/Cart.model')
 const Products = require('../dao/models/Products.model')
 const privateAccess = require('../middlewares/privateAccess.middleware')
 const userAccess = require('../middlewares/userAccess.middleware')
-const publicAccess = require('../middlewares/publicAccess.middleware')
 const saveCart = require('../dao/cart.dao')
 const uuid = require('uuid')
 
@@ -69,7 +68,7 @@ router.put('/:cid', userAccess, async (req, res) => {
     }
 });
 
-router.post('/:cid/product/:pid', userAccess, async (req, res) => {
+router.post('/:cid/product/p:pid', userAccess, async (req, res) => {
     try {
         const cart = await Carts.findOne({ _id: req.params.cartId })
         const product = await Products.findOne({ _id: req.params.productId })
@@ -175,4 +174,5 @@ router.get('/:cid/purchase', userAccess, async (req, res, next) => {
         next(error)
     }
 })
+
 module.exports = router

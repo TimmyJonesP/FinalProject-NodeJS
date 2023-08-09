@@ -4,7 +4,7 @@ const userAccess = require("../middlewares/userAccess.middleware");
 
 const router = Router()
 
-router.get('/', userAcces, async (req, res, next) => {
+router.get('/', userAccess, async (req, res, next) => {
     try {
         const messages = await Message.find().lean()
         const userEmail = req.user.email

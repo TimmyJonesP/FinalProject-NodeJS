@@ -1,7 +1,7 @@
 const passport = require('passport')
 const local = require('passport-local')
 const GithubStrategy = require('passport-github2')
-const { createHash, passwordValidate } = require('../utils/crypt.password')
+const { hashPassword, isValidPassword } = require('../utils/crypt.password')
 const User = require('../dao/models/User.model')
 const usersCreate = require('../dao/users.dao')
 const { CLIENT_ID, CLIENT_SECRET, CLIENT_URL } = require('../config/passport.secret')
@@ -21,7 +21,7 @@ const initializePassport = () => {
             return done(null, false)
           }
 
-          const hashedPassword = createHash(password)
+          const hashedPassword = hashPassword(password)
           const userInfo = {
             first_name,
             last_name,
@@ -49,7 +49,7 @@ const initializePassport = () => {
         try {
           const user = await User.findOne({ email: username })
           if (!user) return done(null, false)
-          if (!passwordValidate(password, user)) return done(null, false)
+          if (!isValidPassword(password, user)) return done(null, false)
 
 
           done(null, user)
@@ -70,7 +70,7 @@ const initializePassport = () => {
       },
       async ( accessToken, refreshToken,profile, done) => {
         try {
-          const user = await Users.findOne({ email: profile._json.email })
+          const user = await User.findOne({ email: profile._json.email })
           if(!user){
             const userInfo = {
               first_name: profile._json.name,
@@ -79,7 +79,7 @@ const initializePassport = () => {
               email: profile._json.email,
               password: '',
             }
-            const newUser = await userDao.createUser(userInfo)
+            const newUser = await usersCreate(userInfo)
             return done(null, newUser)
           }
           done(null, user)

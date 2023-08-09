@@ -4,7 +4,7 @@ const mongoConnect = require('../db')
 const router = require('./router')
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const { dbAdmin, dbPassword, dbHost, dbName } = require("../src/config/db.config");
+const { dbMongo } = require("../src/config/db.config");
 const cookieParser = require('cookie-parser');
 const initializePassport = require('./config/passport.config');
 const passport = require('passport');
@@ -23,7 +23,7 @@ app.use(
     session({
         store: MongoStore.create({
             mongoUrl:
-            `mongodb+srv://${dbAdmin}:${dbPassword}@${dbHost}/${dbName}sessions?retryWrites=true&w=majority`,
+            dbMongo,
             mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
         }),
         secret: 'coderSecret',
